@@ -30,7 +30,7 @@ from dataclasses import dataclass
 # You can customize these values or load from a config file
 
 # Bridge IP - can be set to None for auto-discovery
-BRIDGE_IP = "192.168.1.16"  # Example: "192.168.1.100"
+BRIDGE_IP = None  # Example: "192.168.1.100"
 
 # Path to store bridge connection info
 CONFIG_DIR = os.path.expanduser("~/.hue-mcp")

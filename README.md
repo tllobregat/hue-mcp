@@ -201,7 +201,18 @@ python hue_server.py --host 0.0.0.0 --port 8888 --log-level debug
 
 ## Troubleshooting
 
-- **Bridge not found**: If automatic discovery doesn't work, manually edit the `BRIDGE_IP` variable in the script with your bridge's IP address
+- **Bridge not found**: If automatic discovery doesn't work, you have two options:
+  1. Manually edit the `BRIDGE_IP` variable in the script with your bridge's IP address
+  2. Manually create a config file:
+     ```bash
+     # Create the config directory
+     mkdir -p ~/.hue-mcp
+     
+     # Create a config.json file with your bridge IP
+     echo '{"bridge_ip": "192.168.1.x"}' > ~/.hue-mcp/config.json
+     ```
+     Replace "192.168.1.x" with your actual Hue bridge IP address
+     
 - **Connection issues**: Delete `~/.hue-mcp/config.json` and restart the server to re-authenticate
 - **Light control not working**: Use `refresh_lights` tool to update the light information cache
 - **Groups or scenes not showing up**: Restart the bridge and server to sync all data
