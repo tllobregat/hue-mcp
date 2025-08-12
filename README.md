@@ -47,8 +47,11 @@ This server leverages the Model Context Protocol (MCP) to provide a seamless int
 # Install dependencies
 pip install phue mcp
 
-# Run the server
+# Run the server (HTTP/SSE mode)
 python hue_server.py
+
+# Run the server (stdio mode for MCP clients)
+python hue_server.py --stdio
 
 # Install in Claude Desktop
 mcp install hue_server.py --name "My Hue Lights"
@@ -196,8 +199,24 @@ quick_scene("Evening Relaxation", group_id=2, rgb=[255, 147, 41], brightness=120
 Run the server with custom settings:
 
 ```bash
+# Run with custom host and port (HTTP/SSE mode)
 python hue_server.py --host 0.0.0.0 --port 8888 --log-level debug
+
+# Run in stdio mode for MCP clients
+python hue_server.py --stdio --log-level debug
+
+# All available options:
+python hue_server.py --help
 ```
+
+### Command Line Arguments
+
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `--host` | Host to bind the server to (HTTP/SSE mode only) | `127.0.0.1` |
+| `--port` | Port to run the server on (HTTP/SSE mode only) | `8080` |
+| `--log-level` | Logging level (debug, info, warning, error, critical) | `info` |
+| `--stdio` | Run server using stdio transport instead of HTTP/SSE | `False` |
 
 ## Troubleshooting
 
