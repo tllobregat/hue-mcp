@@ -1059,22 +1059,30 @@ if __name__ == "__main__":
     parser.add_argument("--log-level", type=str, default="info", 
                         choices=["debug", "info", "warning", "error", "critical"],
                         help="Logging level")
+    parser.add_argument("--stdio", action="store_true",
+                        help="Run server using stdio transport instead of SSE")
     args = parser.parse_args()
     
     # Set up logging level
     log_level = getattr(logging, args.log_level.upper())
     logging.getLogger("hue-mcp").setLevel(log_level)
     
-    print(f"Starting Philips Hue MCP Server on {args.host}:{args.port}")
-    print("Press Ctrl+C to stop the server")
-    
-    # Run the server using mcp.run() or manually with Uvicorn
-    # mcp.run(host=args.host, port=args.port)  # Use this for direct execution
-    
-    # Or use Uvicorn for more control
-    uvicorn.run(
-        mcp.sse_app(),
-        host=args.host,
-        port=args.port,
-        log_level=args.log_level
-    )
+    if args.stdio:
+        print("Starting Philips Hue MCP Server in stdio mode")
+        print("Press Ctrl+C to stop the server")
+
+        mcp.run(transport='stdio')
+    else:
+        print(f"Starting Philips Hue MCP Server on {args.host}:{args.port}")
+        print("Press Ctrl+C to stop the server")
+        
+        # Run the server using mcp.run() or manually with Uvicorn
+        # mcp.run(host=args.host, port=args.port)  # Use this for direct execution
+        
+        # Or use Uvicorn for more control
+        uvicorn.run(
+            mcp.sse_app(),
+            host=args.host,
+            port=args.port,
+            log_level=args.log_level
+        )
