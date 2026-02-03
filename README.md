@@ -47,6 +47,12 @@ This server leverages the Model Context Protocol (MCP) to provide a seamless int
 # Install dependencies
 pip install phue mcp
 
+# Set required environment variable for Hue bridge IP
+# Windows
+set HUE_BRIDGE_IP=192.168.1.x
+# Linux/macOS
+export HUE_BRIDGE_IP=192.168.1.x
+
 # Run the server (HTTP/SSE mode)
 python hue_server.py
 
@@ -78,14 +84,35 @@ pip install phue mcp
 
 ### First Run
 
-1. Run the server:
+1. Set the required environment variable for your Hue bridge IP:
+
+```bash
+# Windows
+set HUE_BRIDGE_IP=192.168.1.x
+
+# Linux/macOS
+export HUE_BRIDGE_IP=192.168.1.x
+```
+
+2. If you have a Hue HDMI Sync Box and want to use the ambilight functionality, set these environment variables:
+
+```bash
+# Windows
+set SYNC_BOX_IP=192.168.1.y
+set SYNC_BOX_ACCESS_TOKEN=your_access_token
+
+# Linux/macOS
+export SYNC_BOX_IP=192.168.1.y
+export SYNC_BOX_ACCESS_TOKEN=your_access_token
+```
+
+3. Run the server:
 
 ```bash
 python hue_server.py
 ```
 
-2. When prompted, press the link button on your Hue bridge to authorize the connection
-3. Your connection details will be saved in `~/.hue-mcp/config.json` for future use
+4. When prompted, press the link button on your Hue bridge to authorize the connection
 
 ## Using with Claude
 
@@ -220,19 +247,18 @@ python hue_server.py --help
 
 ## Troubleshooting
 
-- **Bridge not found**: If automatic discovery doesn't work, you have two options:
-  1. Manually edit the `BRIDGE_IP` variable in the script with your bridge's IP address
-  2. Manually create a config file:
-     ```bash
-     # Create the config directory
-     mkdir -p ~/.hue-mcp
-     
-     # Create a config.json file with your bridge IP
-     echo '{"bridge_ip": "192.168.1.x"}' > ~/.hue-mcp/config.json
-     ```
-     Replace "192.168.1.x" with your actual Hue bridge IP address
-     
-- **Connection issues**: Delete `~/.hue-mcp/config.json` and restart the server to re-authenticate
+- **Bridge not found**: Make sure you've set the `HUE_BRIDGE_IP` environment variable correctly:
+  ```bash
+  # Windows
+  set HUE_BRIDGE_IP=192.168.1.x
+
+  # Linux/macOS
+  export HUE_BRIDGE_IP=192.168.1.x
+  ```
+  Replace "192.168.1.x" with your actual Hue bridge IP address
+
+- **Sync Box not working**: Ensure you've set both `SYNC_BOX_IP` and `SYNC_BOX_ACCESS_TOKEN` environment variables correctly
+- **Connection issues**: Restart the server and press the link button on your Hue bridge when prompted
 - **Light control not working**: Use `refresh_lights` tool to update the light information cache
 - **Groups or scenes not showing up**: Restart the bridge and server to sync all data
 
@@ -240,7 +266,7 @@ python hue_server.py --help
 
 This server connects to your Philips Hue bridge using the `phue` Python library and exposes functionality through the Model Context Protocol. When an AI like Claude connects:
 
-1. The server authenticates with your bridge using stored credentials
+1. The server connects to your bridge using the IP address provided in the environment variable
 2. It provides resources that describe your lighting setup
 3. It exposes tools that Claude can use to control your lights
 4. It offers prompts that help Claude understand how to interact with your lights
