@@ -32,6 +32,7 @@ from dataclasses import dataclass
 
 # Bridge IP - must be set via HUE_BRIDGE_IP environment variable
 BRIDGE_IP = os.environ.get("HUE_BRIDGE_IP")  # Get bridge IP from environment variable
+BRIDGE_USERNAME = os.environ.get("HUE_BRIDGE_USERNAME")
 
 # Hue HDMI Sync Box configuration for ambilight functionality - must be set via environment variables
 SYNC_BOX_IP = os.environ.get("SYNC_BOX_IP")  # Get sync box IP from environment variable
@@ -75,8 +76,13 @@ async def hue_lifespan(server: FastMCP) -> AsyncIterator[HueContext]:
             logger.error(error_msg)
             raise ValueError(error_msg)
 
+        if not BRIDGE_USERNAME:
+            error_msg = "No bridge username specified. Please set the HUE_BRIDGE_USERNAME environment variable."
+            logger.error(error_msg)
+            raise ValueError(error_msg)
+
         logger.info(f"Connecting to bridge at {BRIDGE_IP}")
-        bridge = Bridge(BRIDGE_IP)
+        bridge = Bridge(BRIDGE_IP, username=BRIDGE_USERNAME)
 
         # Connect to the bridge (this may prompt user to press the link button)
         bridge.connect()
